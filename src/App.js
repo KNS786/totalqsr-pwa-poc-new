@@ -1,7 +1,5 @@
 import React,{useState,useEffect} from 'react';
 import { requestPermission } from './firebase';
-import logo from './logo.svg';
-import './App.css';
 
 function App() {
   const allowPushNotification = (event:any) =>{
