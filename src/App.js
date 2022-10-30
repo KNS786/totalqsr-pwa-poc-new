@@ -1,23 +1,23 @@
+import React,{useState,useEffect} from 'react';
+import { requestPermission } from './firebase';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const allowPushNotification = (event:any) =>{
+    requestPermission().then((data)=>{
+      console.log("texmp data :: ", data);
+      if(data){
+        console.log("data :: ",data);
+      }
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <button className="notification" onClick = {allowPushNotification}>
+        Allow Push Notification
+      </button>
     </div>
   );
 }
