@@ -4,10 +4,10 @@ export const setDeviceToken = (token) =>{
 
 
 export const isDeviceTokenRegistered = (key) => {
-    try{
-        localStorage.getItem(key);
+    if(localStorage.getItem(key)){
         return true;
-    }catch(error){
+    }
+    else{
         return false;
     }
 

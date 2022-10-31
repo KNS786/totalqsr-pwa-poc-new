@@ -5,7 +5,7 @@ import { getMessaging , getToken } from "firebase/messaging";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import { setDeviceToken } from './store/deviceToken';
+import { setDeviceToken , removeDeviceToken} from './store/deviceToken';
 import dayjs from 'dayjs';
 
 // Your web app's Firebase configuration
@@ -23,6 +23,7 @@ const firebaseConfig = {
 
 export function requestPermission() {
   console.log('Requesting permission...');
+  console.log("dayjs :: ", dayjs().add(30,'day').format('YYYY-MM-DD').toString());
   return Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
       console.log('Notification permission granted.');
@@ -48,7 +49,7 @@ export function requestPermission() {
       })
     }
     else{
-      setDeviceToken("");
+      removeDeviceToken();
       console.log("you don't have permission ");
     }
     return false;
