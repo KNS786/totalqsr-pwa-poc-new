@@ -14,6 +14,8 @@ export const isDeviceTokenRegistered = (key) => {
 }
 
 export const getDeviceToken = (key) =>{
+    const deviceToken = localStorage.getItem(key);
+    console.log("STORAGE DEVICE TOKEN :: ", deviceToken);
     return JSON.parse(localStorage.getItem(key));
 }
 

@@ -23,9 +23,10 @@ const firebaseConfig = {
 
 export function requestPermission() {
   console.log('Requesting permission...');
-  console.log("dayjs :: ", dayjs().add(30,'day').format('YYYY-MM-DD').toString());
   return Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
+      console.log("dayjs :: ", dayjs().add(30,'day').format('YYYY-MM-DD').toString());
+
       console.log('Notification permission granted.');
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
