@@ -10,11 +10,11 @@ export const isDeviceTokenRegistered = (key) => {
     }catch(error){
         return false;
     }
-    
+
 }
 
 export const getDeviceToken = (key) =>{
-    return localStorage.getItem(key);
+    return JSON.parse(localStorage.getItem(key));
 }
 
 export const removeDeviceToken = () =>{

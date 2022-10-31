@@ -34,7 +34,7 @@ export function requestPermission() {
       if(token){
         console.log("FCM Tokens :: ",token);
         const deviceToken = {
-          deviceToken:token,
+          deviceToken:token.toString(),
           expiresIn:dayjs().add(30,'day').format('YYYY-MM-DD').toString()
         };
         setDeviceToken(JSON.stringify(deviceToken));

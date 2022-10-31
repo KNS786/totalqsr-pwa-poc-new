@@ -6,17 +6,20 @@ import dayjs from 'dayjs';
 function App() {
   const [deviceToken,setDeviceToken] = useState("")
   const [locationStore,setLocationStore]  = useState([])
+  const [tokenExpires,setTokenExpires] = useState();
 
    const allowPushNotification = () =>{
     const checkDeviceTokenRegisted = isDeviceTokenRegistered("deviceToken");
     console.log("checkDeviceTokenRegisted" , checkDeviceTokenRegisted);
     if(checkDeviceTokenRegisted){
       // device token aleady Exists
-      const deviceTokenFromLocalStore = JSON.parse(getDeviceToken("deviceToken"));
+      const deviceTokenFromLocalStore = getDeviceToken("deviceToken");
+      console.log("deviceTokenFromLocalStore ", deviceTokenFromLocalStore);
       const tokenExpireDate = deviceTokenFromLocalStore.expiresIn;
       console.log("tokenExpire Date ::: ", tokenExpireDate);
       if(!dayjs().isSame(dayjs(tokenExpireDate),'date') ){
         setDeviceToken(deviceTokenFromLocalStore.deviceToken);
+        setTokenExpires(deviceTokenFromLocalStore.expiresIn);
       }
       else{
         //create New device Token 
@@ -29,10 +32,10 @@ function App() {
     }
 
 
-    const deviceToken = getDeviceToken("deviceToken");
-    setDeviceToken(
-      deviceToken !== "" ? deviceToken : "Please enabled your Notification"
-    ) 
+    // const deviceToken = getDeviceToken("deviceToken");
+    // setDeviceToken(
+    //   deviceToken !== "" ? deviceToken : "Please enabled your Notification"
+    // ) 
   }
 
   const getCurrentLocation = () =>{
@@ -58,6 +61,7 @@ function App() {
         Allow Push Notification
       </button> */}
       <p>Your Device Token : {deviceToken}</p>
+      <p>Your Device Token ExpiresIn: {tokenExpires}</p>
       {
         locationStore.length > 0 ?
         locationStore.map((value,index) => {
