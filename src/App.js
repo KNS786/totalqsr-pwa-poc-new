@@ -1,18 +1,33 @@
 import React,{useState,useEffect} from 'react';
 import { requestPermission } from './firebase';
-import { getDeviceToken } from './store/deviceToken';
+import { getDeviceToken,isDeviceTokenRegistered } from './store/deviceToken';
+import dayjs from 'dayjs';
 
 function App() {
   const [deviceToken,setDeviceToken] = useState("")
   const [locationStore,setLocationStore]  = useState([])
 
    const allowPushNotification = () =>{
-    requestPermission().then((data)=>{
-      console.log("texmp data :: ", data);
-      if(data){
-        console.log("data :: ",data);
+    const checkDeviceTokenRegisted = isDeviceTokenRegistered("deviceToken");
+    console.log("checkDeviceTokenRegisted" , checkDeviceTokenRegisted);
+    if(checkDeviceTokenRegisted){
+      // device token aleady Exists
+      const deviceTokenFromLocalStore = JSON.parse(getDeviceToken("deviceToken"));
+      const tokenExpireDate = deviceTokenFromLocalStore.expiresIn;
+      console.log("tokenExpire Date ::: ", tokenExpireDate);
+      if(!dayjs().isSame(dayjs(tokenExpireDate),'date') ){
+        setDeviceToken(deviceTokenFromLocalStore.deviceToken);
       }
-    })
+      else{
+        //create New device Token 
+        requestPermission();
+      }
+    }
+    else{
+      console.log("request Permission :: ");
+      requestPermission();
+    }
+
 
     const deviceToken = getDeviceToken("deviceToken");
     setDeviceToken(
@@ -25,7 +40,7 @@ function App() {
       if(navigator.geolocation){
         navigator.geolocation.watchPosition((position)=>{
           console.log("Current Moving position :: ",position);
-          setLocationStore((oldArray) => [...oldArray,position]);
+          setLocationStore((oldPos) => [...oldPos,position]);
           console.log("location Store :: ", locationStore);
 
         });
@@ -46,12 +61,12 @@ function App() {
       {
         locationStore.length > 0 ?
         locationStore.map((value,index) => {
-          return (<p key = {index}>{"latitude: "+ value.coords.latitude +"  longitude: " + value.coords.longitude} </p>);
+            return (<p key = {index}>{"latitude: "+ value.coords.latitude +"  longitude: " + value.coords.longitude} </p>);
         })
         :
         (<></>)
       }
-
+   
     </div>
   );
 }

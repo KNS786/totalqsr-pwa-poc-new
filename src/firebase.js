@@ -6,6 +6,7 @@ import { getMessaging , getToken } from "firebase/messaging";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 import { setDeviceToken } from './store/deviceToken';
+import dayjs from 'dayjs';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -32,7 +33,11 @@ export function requestPermission() {
      getToken(messaging, vapiKey).then((token)=>{
       if(token){
         console.log("FCM Tokens :: ",token);
-        setDeviceToken(token);
+        const deviceToken = {
+          deviceToken:token,
+          expiresIn:dayjs().add(30,'day').format('YYYY-MM-DD').toString()
+        };
+        setDeviceToken(JSON.stringify(deviceToken));
         return true;
       }
       else{
