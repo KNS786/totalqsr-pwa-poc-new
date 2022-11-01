@@ -2,11 +2,13 @@ import React,{useState,useEffect} from 'react';
 import { requestPermission } from './firebase';
 import { getDeviceToken,isDeviceTokenRegistered } from './store/deviceToken';
 import dayjs from 'dayjs';
+import { SplashScreen } from './screens/SplashScreen';
 
 function App() {
   const [deviceToken,setDeviceToken] = useState("")
   const [locationStore,setLocationStore]  = useState([])
   const [tokenExpires,setTokenExpires] = useState();
+  const [splashScreen,setSplashScreenActive] = useState(true);
 
    const allowPushNotification = () =>{
     const checkDeviceTokenRegisted = isDeviceTokenRegistered("deviceToken");
@@ -50,29 +52,43 @@ function App() {
     }
   }
 
+  const initSplashScreen = () =>{
+    setTimeout(() => {
+      setSplashScreenActive(false);
+    },5000);
+  }
+
   useEffect(()=>{
+    initSplashScreen();
     allowPushNotification();
-    getCurrentLocation()
+    getCurrentLocation();
   })
 
   return (
-    <div className="App">
-       {/* <button className="notification" onClick = {allowPushNotification}>
-        Allow Push Notification
-      </button> */}
-      <p>Your Device Token : {deviceToken}</p>
-      <p>Your Device Token ExpiresIn: {tokenExpires}</p>
+    <>
       {
-        locationStore.length > 0 ?
-        locationStore.map((value,index) => {
-            return (<p key = {index}>{"latitude: "+ value.coords.latitude +"  longitude: " + value.coords.longitude} </p>);
-        })
+        splashScreen ?
+        ( <SplashScreen/> )
         :
-        (<></>)
+        (
+          <div className="App">
+          <p>Your Device Token : {deviceToken}</p>
+          <p>Your Device Token ExpiresIn: {tokenExpires}</p>
+          {
+            locationStore.length > 0 ?
+            locationStore.map((value,index) => {
+                return (<p key = {index}>{"latitude: "+ value.coords.latitude +"  longitude: " + value.coords.longitude} </p>);
+            })
+            :
+            (<></>)
+          }
+        </div>
+
+        )
+
       }
-   
-    </div>
-  );
+    </>
+  )
 }
 
 export default App;
